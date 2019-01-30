@@ -1,10 +1,12 @@
-![](images/datascience_banner.jpeg)
+![](images/datascience_banner.png)
+
 
 Author: [Qixing Li](https://qixing810.github.io/)
 
 Date: Jan 29, 2019
 
 Code: [Github](https://github.com/qixing810/CUNYSPS-DataScience) 
+
 
 ## Spring 2019
 
