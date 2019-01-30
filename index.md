@@ -10,15 +10,15 @@ Code: [Github](https://github.com/qixing810/CUNYSPS-DataScience)
 
 # Spring 2019
 
-## DS607 Data Acquisition and Management
-1. 
-2. 
+## [DS607 Data Acquisition and Management](/DS607/DS607.md)
+1. Asignments
+2. Project
 3. 
 
 
 
 ## DS606 Statistics and Probability for Data Analytics
-1. 
-2. 
+1. Asignments
+2. Project
 3. 
 
