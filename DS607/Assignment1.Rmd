@@ -25,7 +25,7 @@ summary(mash_uci)
 ```
 
 ##3.Subsetting the dataset 
-It's my first impression that odor and color could be an easy way to detect whether a mushroom poisonous or not. Further analysis like feature selection would be necessary if the project is going on. 
+It's my first impression that odor and color could be an easy way to detect whether a mushroom poisonous or not. Further analysis like feature selection would be necessary if the project is going to continue. 
 ```{r}
 sub_mush <- mash_uci %>% 
   select("Bruises", "Odor","GillSize", "ColorAbove", "SporeColor" , "Class")
