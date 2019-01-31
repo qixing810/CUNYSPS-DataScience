@@ -24,8 +24,8 @@ glimpse(mash_uci)
 summary(mash_uci)
 ```
 
-##3.Subsetting data 
-It's my sense that odor and color could be easy way to detect whether a mushroom poisonous or not. And I am sure further analysis would be taken in the coming assignment.
+##3.Subsetting the dataset 
+It's my first impression that odor and color could be an easy way to detect whether a mushroom poisonous or not. Further analysis like feature selection would be necessary if the project is going on. 
 ```{r}
 sub_mush <- mash_uci %>% 
   select("Bruises", "Odor","GillSize", "ColorAbove", "SporeColor" , "Class")
@@ -33,7 +33,8 @@ write_csv(sub_mush,"C:/ds607/sub_mush.csv")
 dim(sub_mush)
 ```
 
-##4.Replace appropriates
+
+##4.Replace the abbreviations
 ```{r}
 sub_mush$Bruises <- fct_recode(sub_mush$Bruises,
                                "bruises" ="t",
@@ -80,5 +81,7 @@ sub_mush$Class <- fct_recode(sub_mush$Class,
                              "poisonous" = "p")
 ```
 
-
-
+##5.Take a look of the first 20 rows to make sure the abbreviations are being replaced
+```{r}
+head(sub_mush,n=20)
+```

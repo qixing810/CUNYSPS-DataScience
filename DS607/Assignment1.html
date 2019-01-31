@@ -199,17 +199,17 @@ glimpse(mash_uci)</code></pre>
 ##                      b      :  48   y:1712     u: 368  
 ##                      (Other): 144              w: 192</code></pre>
 </div>
-<div id="subsetting-data" class="section level2">
-<h2>3.Subsetting data</h2>
-<p>It’s my sense that odor and color could be easy way to detect whether a mushroom poisonous or not. And I am sure further analysis would be taken in the coming assignment.</p>
+<div id="subsetting-the-dataset" class="section level2">
+<h2>3.Subsetting the dataset</h2>
+<p>It’s my first impression that odor and color could be an easy way to detect whether a mushroom poisonous or not. Further analysis like feature selection would be necessary if the project is going on.</p>
 <pre class="r"><code>sub_mush &lt;- mash_uci %&gt;% 
   select(&quot;Bruises&quot;, &quot;Odor&quot;,&quot;GillSize&quot;, &quot;ColorAbove&quot;, &quot;SporeColor&quot; , &quot;Class&quot;)
 write_csv(sub_mush,&quot;C:/ds607/sub_mush.csv&quot;)
 dim(sub_mush)</code></pre>
 <pre><code>## [1] 8124    6</code></pre>
 </div>
-<div id="replace-appropriates" class="section level2">
-<h2>4.Replace appropriates</h2>
+<div id="replace-the-abbreviations" class="section level2">
+<h2>4.Replace the abbreviations</h2>
 <pre class="r"><code>sub_mush$Bruises &lt;- fct_recode(sub_mush$Bruises,
                                &quot;bruises&quot; =&quot;t&quot;,
                                &quot;no&quot; = &quot;f&quot;)
@@ -253,6 +253,31 @@ sub_mush$SporeColor &lt;- fct_recode(sub_mush$SporeColor,
 sub_mush$Class &lt;- fct_recode(sub_mush$Class,
                              &quot;edible&quot; =&quot;e&quot;,
                              &quot;poisonous&quot; = &quot;p&quot;)</code></pre>
+</div>
+<div id="take-a-look-of-the-first-20-rows-to-make-sure-the-abbreviations-are-being-replaced" class="section level2">
+<h2>5.Take a look of the first 20 rows to make sure the abbreviations are being replaced</h2>
+<pre class="r"><code>head(sub_mush,n=20)</code></pre>
+<pre><code>##    Bruises    Odor GillSize ColorAbove SporeColor     Class
+## 1  bruises pungent   narrow      white      black poisonous
+## 2  bruises  almond    board      white      brown    edible
+## 3  bruises   anise    board      white      brown    edible
+## 4  bruises pungent   narrow      white      black poisonous
+## 5       no    none    board      white      brown    edible
+## 6  bruises  almond    board      white      black    edible
+## 7  bruises  almond    board      white      black    edible
+## 8  bruises   anise    board      white      brown    edible
+## 9  bruises pungent   narrow      white      black poisonous
+## 10 bruises  almond    board      white      black    edible
+## 11 bruises   anise    board      white      brown    edible
+## 12 bruises  almond    board      white      black    edible
+## 13 bruises  almond    board      white      brown    edible
+## 14 bruises pungent   narrow      white      brown poisonous
+## 15      no    none    board      white      black    edible
+## 16      no    none   narrow      white      brown    edible
+## 17      no    none    board      white      brown    edible
+## 18 bruises pungent   narrow      white      black poisonous
+## 19 bruises pungent   narrow      white      brown poisonous
+## 20 bruises pungent   narrow      white      brown poisonous</code></pre>
 </div>
 
 
