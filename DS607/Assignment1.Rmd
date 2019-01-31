@@ -81,7 +81,7 @@ sub_mush$Class <- fct_recode(sub_mush$Class,
                              "poisonous" = "p")
 ```
 
-##5.Take a look at the first 20 rows to make sure the abbreviations are being replaced
+##5.Take a look at the first 20 rows to make sure the abbreviations are replaced
 ```{r}
 head(sub_mush,n=20)
 ```
