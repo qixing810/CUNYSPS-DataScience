@@ -17,7 +17,7 @@ Code: [Github](https://github.com/qixing810/CUNYSPS-DataScience)
 
 
 
-## DS606 Statistics and Probability for Data Analytics
+## DS606 Statistics and Probability for Data Analytics(/DS606/DS606.md)
 1. Asignments
 2. Project
 3. 
