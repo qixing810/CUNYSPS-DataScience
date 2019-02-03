@@ -1,4 +1,4 @@
-![](images/datascience_banner.png)
+![](images/datascience_banner.jpeg)
 
 
 Author: [Qixing Li](https://qixing810.github.io/)
