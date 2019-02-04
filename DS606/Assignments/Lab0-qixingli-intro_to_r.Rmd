@@ -1,5 +1,6 @@
 ---
 title: "Introduction to R and RStudio"
+author: "Qixing Li"
 output:
   html_document:
     css: ./lab.css
@@ -274,53 +275,56 @@ The data are stored in a data frame called `present`.
 
 -   What years are included in this data set? What are the dimensions of the 
     data frame and what are the variable or column names?
-
-```{r}
-library(tidyverse)
-# Dimensions of the data set
-dim(present)
-
-# Variables
-names(present)
-
-# Years are included
-year <- present$year
-range(year)
-```
+    ```{r}
+    library(tidyverse)
+    # Dimensions of the data set
+    dim(present)
+    
+    # Variables
+    names(present)
+    
+    # Years are included
+    year <- present$year
+    range(year)
+    
+    ```
 
 -   How do these counts compare to Arbuthnot's? Are they on a similar scale?
-From the summary of the two data sets, we can clearly see that the *present* has much large numbers of newborns
-```{r}
-# show summary of the two data sets
-summary(arbuthnot)
-summary(present)
-```
+
+    **From the summary of the two data sets, we can clearly see that the *present* has much large 
+    numbers of newborns.**
+    ```{r}
+    # show summary of the two data sets
+    summary(arbuthnot)
+    summary(present)
+    ```
 
 
 -   Make a plot that displays the boy-to-girl ratio for every year in the data 
     set. What do you see? Does Arbuthnot's observation about boys being born in
     greater proportion than girls hold up in the U.S.? Include the plot in your 
     response.
-From the horizontal line in the plot below, we can see that the boy-to-girl ratio is greater than 1 for all time.
-
-```{r}
-# Boy-to-girl ratio in U.S.
-ggplot(present,aes(year,boys/girls))+
-  geom_line()+
-  geom_hline(yintercept = 1.04,color='red')
-```
+    
+    **From the horizontal line in the plot below, we can see that the boy-to-girl ratio is greater 
+    than 1 for all time.**
+    ```{r}
+    # Boy-to-girl ratio in U.S.
+    ggplot(present,aes(year,boys/girls))+
+      geom_line()+
+      geom_hline(yintercept = 1.04,color='red')
+    ```
 
 -   In what year did we see the most total number of births in the U.S.? You can
     refer to the help files or the R reference card 
     [http://cran.r-project.org/doc/contrib/Short-refcard.pdf](http://cran.r-project.org/doc/contrib/Short-refcard.pdf)
     to find helpful commands.
-```{r}
-# Calculate the total newborns for ever year
-present$total = present$boys + present$girls
-
-# select the largest total row
-filter(present,total==max(total))
-```
+    ```{r}
+    # Calculate the total newborns for ever year
+    present$total = present$boys + present$girls
+    
+    # select the largest total row
+    filter(present,total==max(total))
+    ```
 
 
 These data come from a report by the Centers for Disease Control 
