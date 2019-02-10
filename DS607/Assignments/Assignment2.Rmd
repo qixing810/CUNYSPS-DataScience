@@ -1,0 +1,72 @@
+---
+title: "Assignment 2"
+author: "Qixing Li"
+date: "February 10, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,message=FALSE, warning=FALSE)
+```
+<br>
+
+### 1. Load all the required libraries
+```{r}
+library(RMySQL)
+library(tidyverse)
+library(plotly)
+```
+<br>
+
+### 2. Connect to MySQL and save the data 
+```{r}
+connection <-dbConnect(MySQL(),user='root', 
+                       password='root', 
+                       dbname="movies",
+                       host='localhost'
+                       )
+movies_rating <- as.data.frame(dbGetQuery(connection,'select * from movies_rating;'))
+```
+<br>
+
+### 3. Summarize the data 
+```{r}
+mo_tidy <- movies_rating %>% 
+  spread(Movie,Rating)
+summary(mo_tidy)
+```
+<br>
+
+### 4. Visiualize the average rating of each movies 
+```{r}
+rating_mean <- movies_rating %>%
+  na.omit()%>%
+  group_by(Movie) %>%
+  summarise(Rating = mean(Rating))
+  
+avg_plot <- rating_mean %>%
+  ggplot(aes(x = Movie,y = Rating,fill=Movie))+
+  geom_bar(stat = "identity")+
+  labs(title = "Average Rating of the Movies")+
+  xlab("")+
+  ylab("Rating")+
+  theme(axis.text.x = element_text(angle = 15, hjust = 1),
+        legend.position='none')
+ggplotly(avg_plot)
+```
+<br>
+
+### 5. Take a look from the boxplot  
+```{r}
+mov_bp <- movies_rating %>%
+  group_by(Movie) %>%
+  ggplot(aes(x = Movie,y = Rating,fill=Movie))+
+  geom_boxplot()+
+  labs(title = "Rating of the Movies")+
+  xlab("")+
+  ylab("Rating")+
+  theme(axis.text.x = element_text(angle = 15, hjust = 1),
+        legend.position='none')
+ggplotly(mov_bp)
+```
+

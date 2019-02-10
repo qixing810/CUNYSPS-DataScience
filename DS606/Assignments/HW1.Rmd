@@ -1,0 +1,184 @@
+---
+title: "DS606-Homework1"
+author: "Qixing Li"
+date: "February 5, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### 1.8 Smoking habits of UK residents.
+* (a) What does each row of the data matrix represent? <br>
+```
+Each row of the data matrix represents an observation.
+```
+
+
+* (b) How many participants were included in the survey? <br>
+```
+There are 1691 participants were included in the survey. 
+```
+
+* (c) Indicate whether each variable in the study is numerical or categorical. If numerical, identify as continuous or discrete. If categorical, indicate if the variable is ordinal. <br>
+```
+sex: Categorical
+age: Numerical, coninuous
+marital: Categorical
+grossIncome: Categorical, ordinal
+smoke: Categorical,nominal
+amtWeekends: Numerical, discrete
+amtWeekdays: Numerical, discrete
+```
+
+### 1.10 Cheaters, scope of inference. 
+* (a) Identify the population of interest and the sample in this study. <br>
+```
+The population is all the children between ages 5 and 15. The sample was the 160 choosen children.
+```
+
+* (b) Comment on whether or not the results of the study can be generalized to the population, and if the ﬁndings of the study can be used to establish causal relationships. <br>
+```
+The study can not be generalized to the population for two reasons. First,the 160 children are too small to represent all children. Second, it is not sure whther the study used random sampling.
+The ﬁndings of the study is useful to discover the causal relationships.
+```
+
+
+### 1.28 Reading the paper. 
+* (a) Smokers Found More Prone to Dementia  
+```
+Based on the study, it is hard to make that conclusion because the data is bias. First, the study should include people who are not the health plan members. Also, 23 years after the first survey, it 's possible that some of them might die and we are not sure how the survey deal with the problem. What's more, we don't know whether some of them had dementia when they took the first survey. Finally, smoking is not the only factor will lead to dementia. 
+```
+
+* (b)  The School Bully Is Sleepy
+```
+The statement is not justified. There might be some relationship between sleep disorders and behavioral issues. However, further analysis needed in order to confirm the casual relationship. 
+```
+
+### 1.36 Exercise and mental health. 
+* (a) What type of study is this? <br>
+```
+This is an experiment.
+```
+
+* (b) What are the treatment and control groups in this study? <br>
+```
+The treatment group is the group which exercise twice a week. 
+The other is control group.
+```
+
+* (c) Does this study make use of blocking? If so, what is the blocking variable? <br>
+```
+Yes, the blocking variable is the age.
+```
+
+* (d) Does this study make use of blinding? <br>
+```
+No.
+```
+
+* (e) Comment on whether or not the results of the study can be used to establish a causal relationship between exercise and mental health, and indicate whether or not the conclusions can be generalized to the population at large. <br>
+```
+Yes, it is possible to establish a causal relationship. 
+```
+
+* (f) Suppose you are given the task of determining if this proposed study should get funding. Would you have any reservations about the study proposal?<br>
+```
+Yes, I don't know the sample size, how long the exercises, what kind of exercises and more. Unless those concerns are being clarified,  I won't fund the propose. 
+```
+
+### 1.48 Stats scores. 
+Below are the ﬁnal exam scores of twenty introductory statistics students. 57, 66, 69, 71, 72, 73, 74, 77, 78, 78, 79, 79, 81, 81, 82, 83, 83, 88, 89, 94. Create a box plot of the distribution of these scores. 
+```{r,warning=FALSE,message=FALSE}
+library(tidyverse)
+scores <- c(57, 66, 69, 71, 72, 73, 74, 77, 78, 78, 79, 79, 81, 81, 82, 83, 83, 88, 89, 94)
+scores <- as.data.frame(scores)
+ggplot(scores,aes(y=scores))+
+  geom_boxplot()
+```
+
+
+### 1.50 Mix-and-match. 
+Describe the distribution in the histograms below and match them to the box plots.
+```
+(a)This one can consider to be symmetric and matches the boxplot (2).
+
+(b)The distribution is kind of distribute evently,and matches the boxplot (3). 
+
+(c)The distribution is right skewed, unimodel and matches the boxplot (1).
+```
+
+### 1.56 Distributions and appropriate statistics, Part II. 
+```
+(a) Right skewed(median<mean), Median and IQR
+
+(b) Symmetric, Median and IQR
+
+(c) Left skewed(mean<median), Median and IQR
+
+(d) Right skewed(median<mean), Median and IQR
+```
+
+### 1.70 Heart transplants. 
+* (a) Based on the mosaic plot, is survival independent of whether or not the patient got a transplant? Explain your reasoning. <br>
+```
+The mosaic plot shows more survival rate in the treatment group than the control group.So it is highly possible that survival is somewhat related to the heart transplant.
+```
+
+* (b) What do the box plots below suggest about the efficacy (effectiveness) of the heart transplant treatment. <br>
+```
+Compare the two box plots, we can clearly see that the patients in control group usually died in few months after entering the program while the patients in treatment group live much longer. The median survival time of the treatment group is much larger than the other group. Therefore, the heart transplant treatment is effective for survival.
+```
+
+* (c) What proportion of patients in the treatment group and what proportion of patients in the control group died?
+```{r warning=FALSE,message=FALSE}
+library(openintro)
+data(heartTr)
+
+treat_group <- heartTr %>% 
+  group_by(transplant) %>% 
+  count(survived) %>%
+  filter(transplant == 'treatment') %>%
+  mutate(percentage = n/sum(n))
+treat_rate <- round(treat_group[2,4]*100,2)
+treat_group
+print(paste0("The proportion of patients in the control group died is: ",treat_rate,"%"))
+```
+
+```{r}
+control_group <- heartTr %>% 
+  group_by(transplant) %>% 
+  count(survived) %>%
+  filter(transplant == 'control') %>%
+  mutate(percentage = n/sum(n))
+control_rate <- round(control_group[2,4]*100,2)
+control_group
+print(paste0("The proportion of patients in the control group died is: ",control_rate,"%"))
+```
+
+* (d) Randomization technique
+(i) What are the claims being tested? <br>
+```
+The claim being tested is that a heart transplant increased lifespan.
+```
+ 
+(ii) Second
+
+We write alive on **28** cards representing patients who were alive at the end of the study,and dead on **75** cards representing patients who were not. Then, we shuffle these cards and split them into two groups: one group of size **69** representing treatment, and another group of size **34** representing control. We calculate the difference betwen the proportion of dead cards in the treatment and control groups (treatment  control) and record this value. We repeat this 100 times to build a distribution centered at **0** . Lastly, we calculate the fraction of simulations where the simulated differences in proportions are **23.02%**. If this fraction is low, we conclude that it is unlikely to have observed such an outcome by chance and that the null hypothesis should be rejected in favor of the alternative.
+
+ 
+iii. What do the simulation results shown below suggest about the effectiveness of the transplant program?<br>
+```
+Two of the 100 simulations had a difference of at least 23.02%, the difference observed in the study. We conclude the evidence is suciently strong to reject H0 and assert that the transplant program is effective.
+```
+
+
+
+
+
+
+
+
+
