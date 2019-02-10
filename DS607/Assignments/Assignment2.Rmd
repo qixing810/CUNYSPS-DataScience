@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE,message=FALSE, warning=FALSE)
 
 ### 1. Load all the required libraries
 ```{r}
+library(getPass)
 library(RMySQL)
 library(tidyverse)
 library(plotly)
@@ -19,9 +20,11 @@ library(plotly)
 <br>
 
 ### 2. Connect to MySQL and save the data 
+
 ```{r}
-connection <-dbConnect(MySQL(),user='root', 
-                       password='root', 
+connection <-dbConnect(MySQL(),
+                       user=getPass(msg = "username: "), 
+                       password=getPass(msg = "password: "), 
                        dbname="movies",
                        host='localhost'
                        )
