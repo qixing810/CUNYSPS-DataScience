@@ -1,0 +1,130 @@
+---
+title: "Assignment 3"
+author: "Qixing Li"
+date: "February 17, 2019"
+output:
+  html_document:
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+```
+
+
+
+### Problem 3
+#### Copy the introductory example. The vector name stores the extracted names.
+```{r}
+library(tidyverse)
+raw.data <-"555-1239Moe Szyslak(636) 555-0113Burns, C. Montgomery555-6542Rev. Timothy Lovejoy555 8904Ned Flanders636-555-3226Simpson, Homer5553642Dr. Julius Hibbert"
+```
+</br>
+
+#### (a) Use the tools of this chapter to rearrange the vector so that all elements conform to the standard first_name last_name. 
+```{r}
+#use regular expression to extract all the characters from the raw data
+chara <- unlist(str_extract_all(raw.data,"[A-Za-z,.\\s]+"))
+#remove the empty elements
+name <- chara[chara!=" "]
+name
+```
+</br>
+
+#### (b) Construct a logical vector indicating whether a character has a title (i.e., Rev. and Dr.).
+```{r}
+title_pat <- "Rev. |Dr. "
+title_logi <- str_detect(name,title_pat)
+title_logi
+```
+</br>
+
+#### (c) Construct a logical vector indicating whether a character has a second name. 
+```{r}
+#remove the title from name
+name_notitle <- str_replace_all(name, title_pat, "")
+#count the numbers of space to determine whether a character has a second name
+sec_name_logi <- str_count(name_notitle, ' ') >=2
+sec_name_logi
+```
+</br>
+
+### Problem 4 
+#### Describe the types of strings that conform to the following regular expressions and construct an example that is matched by the regular expression. 
+</br> 
+
+#### (a) [0-9]+\\$ 
+```
+The part of the string begin with at least one integer and end with a "$".
+Example: "12345$"
+```
+```{r}
+example1 <- c("1$","12345$","12345abc$","abc12345$","ab$")
+str_view(example1,"[0-9]+\\$")
+```
+</br> 
+
+#### (b) \\b[a-z]{1,4}\\b
+```
+The part of the string can only contain 1 to 4 lower case letters, no digits or any other types of data. 
+Example: "how"
+```
+```{r}
+example2 <- c("how","ARE","you?","?fine?"," datascience")
+str_view(example2,"\\b[a-z]{1,4}\\b")
+```
+</br> 
+
+#### (c) .*?\\.txt$ 
+```
+The part of the string can begin with anything but must end with exactly ".txt". 
+Example: "text.txt"
+```
+```{r}
+example3 <- c("text.txt","text.txtt",".txt","?text.txt?","\n.txt")
+str_view(example3,".*?\\.txt$")
+```
+</br> 
+
+#### (d) \\d{2}/\\d{2}/\\d{4}
+```
+The part of the string begin with 2 digits follow by a "/" then follow by other pair of 2 digits and "/", and finally follow by other 4 digits.  
+Example: "02/17/2019"
+```
+```{r}
+example4 <- c("02/17/2019","ab/cd/2019","023/17/20199","2/17/19","AB02/17/2019CD")
+str_view(example4,"\\d{2}/\\d{2}/\\d{4}")
+```
+</br> 
+
+#### (e) <(.+?)>.+?</\\1>
+```
+The first part of the string begin with "<", and follow by at least a character, then ">".
+The middle part is also at least one character.
+The last part begin with "<", follow by "/", and end with ">".
+Example: "<img>image</img>"
+```
+```{r}
+example5 <- c("<img>image</img>","<img>image</>","<img></img>","<>image</img>","<i>image</img>")
+str_view(example5,"<(.+?)>.+?</\\1>")
+```
+</br>
+
+### Problem 9 
+#### The following code hides a secret message. Crack it with R and regular expressions. Hint: Some of the characters are more revealing than others! The code snippet is also available in the materials at www.r-datacollection.com.
+</br>
+
+```
+clcopCow1zmstc0d87wnkig7OvdicpNuggvhryn92Gjuwczi8hqrfpRxs5Aj5dwpn0Tanwo Uwisdij7Lj8kpf03AT5Idr3coc0bt7yczjatOaootj55t3Nj3ne6c4Sfek.r1w1YwwojigO d6vrfUrbz2.2bkAnbhzgv4R9i05zEcrop.wAgnb.SqoU65fPa1otfb7wEm24k6t3sR9zqe5 fy89n6Nd5t9kc4fE905gmc4Rgxo5nhDk!gr
+```
+```{r}
+txt <- "clcopCow1zmstc0d87wnkig7OvdicpNuggvhryn92Gjuwczi8hqrfpRxs5Aj5dwpn0Tanwo Uwisdij7Lj8kpf03AT5Idr3coc0bt7yczjatOaootj55t3Nj3ne6c4Sfek.r1w1YwwojigO d6vrfUrbz2.2bkAnbhzgv4R9i05zEcrop.wAgnb.SqoU65fPa1otfb7wEm24k6t3sR9zqe5 fy89n6Nd5t9kc4fE905gmc4Rgxo5nhDk!gr"
+
+upper_txt <- unlist(str_extract_all(txt,"[A-Z.]+"))
+upper_txt_ws <- paste0(upper_txt,collapse = "")
+upper_txt_ws
+```
