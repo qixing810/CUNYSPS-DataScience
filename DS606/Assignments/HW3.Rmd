@@ -1,0 +1,189 @@
+---
+title: "HW3"
+author: "Qixing Li"
+date: "February 22, 2019"
+output:
+  html_document:
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,message=FALSE, warning=FALSE)
+library(tidyverse)
+library(DATA606)
+```
+
+### 3.2 Area under the curve, Part II 
+What percent of a standard normal distribution N(µ = 0, = 1) is found in each region? Be sure to draw a graph. 
+
+#### (a) Z>-1.13  
+**The percentage is: `r paste0(c(round(1 - pnorm(-1.13),4)*100),"%")`**
+```{r}
+normalPlot(bounds= c(-1.13,Inf))
+```
+</br>
+
+#### (b) Z<0.18  
+**The percentage is: `r paste0(c(round(pnorm(0.18),4)*100),"%")`**
+```{r}
+normalPlot(bounds= c(-Inf,0.18))
+```
+</br>
+
+#### (c) Z>8  
+**The percentage is: `r paste0(c(round(1 - pnorm(8),4)*100),"%")`**
+```{r}
+normalPlot(bounds= c(8,Inf))
+```
+</br> 
+
+#### (d) |Z| < 0.5  
+**The percentage is: `r paste0(c(round(pnorm(0.5) - pnorm(-0.5),4)*100),"%")`**
+```{r}
+normalPlot(bounds= c(-0.5,0.5))
+```
+</br> 
+
+### 3.4  Triathlon times, Part I
+#### (a) Write down the short-hand for these two normal distributions.
+* **Men, 30-34: \(N(\mu = 4313, \sigma = 583)\)**
+* **Women, 25-29: \(N(\mu = 5261, \sigma = 807)\)**
+
+</br>
+
+#### (b) What are the Z-scores for Leo’s and Mary’s ﬁnishing times? What do these Z-scores tell you?
+* **Leo’s Z-score is `r (4948-4313)/583`**
+* **Mary’s Z-score is `r (5513-5261)/807`**
+* **Both of their z scores are greater than 0 that means their time is longer than the average.Therefore their performace are under average.**
+    
+</br>
+
+#### (c) Did Leo or Mary rank better in their respective groups? Explain your reasoning. 
+    + **No. Mary has a smaller z score than Leo so Mary ranks better in their respective groups.**
+
+</br>
+
+#### (d) What percent of the triathletes did Leo ﬁnish faster than in his group? 
+* **The percent of the triathletes did Leo ﬁnish faster than in his group is: `r paste0(c(round(1 - pnorm(4948,4313,583),4)*100),"%")`**
+
+</br>
+
+#### (e) What percent of the triathletes did Mary ﬁnish faster than in her group? 
+* **The percent of the triathletes did Mary ﬁnish faster than in her group is: `r paste0(c(round(1 - pnorm(5513,5261,807),4)*100),"%")`**
+
+</br>
+
+#### (f) If the distributions of ﬁnishing times are not nearly normal, would your answers to parts (b) - (e) change? Explain your reasoning. 
+* **For a large amount of data, we can consider that the times are normal. However, if the amount of data is too small and the curve were not symmetric such as skewed to one side, it would affect the Z-score.**
+
+</br>
+    
+### 3.18 Heights of female college students
+</br>
+
+#### (a) The mean height is 61.52 inches with a standard deviation of 4.58 inches. Use this information to determine if the heights approximately follow the 68-95-99.7% Rule. 
+54,55,56,56,57,58,58,59,60,60,60,61,61,62,62,63,63,63,64,65,65,67,67,69,73
+
+* Approximately 68% will fall within `r 61.52-4.58` inches to `r 61.52+4.58` inches. There are 17 data values fall within this range. 
+
+* Approximately 95% will fall within `r 61.52-2*4.58` inches to `r 61.52+2*4.58` inches. There are 17 data values fall within this range.
+
+* Approximately 99.7% will fall within `r 61.52-3*4.58` inches to `r 61.52+3*4.58` inches. All the datas are within this range.
+
+</br>
+
+#### (b) Do these data appear to follow a normal distribution? Explain your reasoning using the graphs provided below.
+* From the graphs, we can consider that these data are nearly normal where the points closely follow the line. It will follow the rule. 
+```{r}
+height <- c(57,66,69,71,72,73,74,77,78,78,79,79,81,81,82,83,83,88,89,94)
+hist(height)
+qqnorm(height)
+qqline(height)
+```
+</br>
+
+
+### 3.22 Defective rate
+</br>
+
+#### (a) What is the probability that the 10th transistor produced is the ﬁrst with a defect? 
+* P(the 10th transistor)= (0.98)^9 \* (0.02) = `r paste0(c(round((0.98)^9 * (0.02),4)*100),"%")`
+
+</br>
+
+#### (b) What is the probability that the machine produces no defective transistors in a batch of 100? 
+
+* P(100)= (0.98)^100 = `r paste0(c(round((0.98)^100,4)*100),"%")`
+
+</br>
+
+#### (c) On average, how many transistors would you expect to be produced before the ﬁrst with a defect? What is the standard deviation? 
+
+* On average `r 1/ 0.02` transistors would be produced before the first defect is found.
+
+* The Standard Devistion is `r round(sqrt((1-0.02)/(0.02)^2),2)`
+
+</br>
+
+#### (d) Another machine that also produces transistors has a 5% defective rate where each transistor is produced independent of the others. On average how many transistors would you expect to be produced with this machine before the ﬁrst with a defect? What is the standard deviation? 
+
+* On average `r 1/ 0.05` transistors would be produced before the first defect would appear.  
+
+* The standard deviation is `r round(sqrt((1-0.05)/(0.05)^2),2)`  
+
+</br>
+
+#### (e) Based on your answers to parts (c) and (d), how does increasing the probability of an event affect the mean and standard deviation of the wait time until success?
+* By increasing the probability of a defect occuring, the mean and standard deviation will decrease.  
+
+</br>
+
+### 3.38 Male children
+</br>
+
+#### (a) Use the binomial model to calculate the probability that two of them will be boys. 
+* P(2b)= 3C2 (0.51)^2\*(0.49)= `r paste0(c(round(choose(3,2)*(0.51)^2*(0.49),4)*100),"%")`
+
+</br>
+
+#### (b) Write out all possible orderings of 3 children, 2 of whom are boys. Use these scenarios to calculate the same probability from part (a) but using the addition rule for disjoint outcomes. Conﬁrm that your answers from parts (a) and (b) match. 
+
+Scenario 1 | Scenario 2 | Scenario 3 |
+--------|---------|---------|
+Girl    | Boy     | Boy     |
+Boy     | Girl    | Boy     |
+Boy     | Boy     | Girl    |
+
+* P(S1) = `r paste0(c(round(0.49*0.51*0.51,4)*100),"%")`
+* P(S2) = `r paste0(c(round(0.51*0.49*0.51,4)*100),"%")`
+* P(S3) = `r paste0(c(round(0.51*0.51*0.49,4)*100),"%")`
+* P = P(S1)+P(S2)+P(S3) = `r paste0(c(round(0.49*0.51*0.51*3,4)*100),"%")`
+
+</br>
+
+#### (c) If we wanted to calculate the probability that a couple who plans to have 8 kids will have 3 boys, brieﬂy describe why the approach from part (b) would be more tedious than the approach from part (a).
+* Because there are total 56 scenarios if the couple plans to have 8 kids will have 3 boys, it is not realistic to list all of them.
+
+</br>
+
+### 3.42 Serving in volleyball
+</br>
+
+#### (a) What is the probability that on the 10th try she will make her 3rd successful serve? 
+*  P(3/10)= 9C2\*(0.85)^7\*(0.15)\^3 = `r paste0(c(round(choose(9,2)*(0.85)^7*(0.15)^3,4)*100),"%")`
+
+</br>
+
+#### (b) Suppose she has made two successful serves in nine attempts. What is the probability that her 10th serve will be successful? 
+*  The probability the next serve will be successful is still 15% because the serves are independent of each other.
+
+</br>
+
+#### (c) Even though parts (a) and (b) discuss the same scenario, the probabilities you calculated should be different. Can you explain the reason for this discrepancy?
+* In part(b), it doen't matter how many times she was successful in the first nine attempts. It will not affect the 10th attempt, because the serves are independent of each other. However, there are two successful serves in the first nine attempts while seven fail in part(a). And it definitely affect the 10th attempt.
+
+
