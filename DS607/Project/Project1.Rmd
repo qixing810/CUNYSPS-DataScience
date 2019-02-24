@@ -1,0 +1,105 @@
+---
+title: "Project 1"
+author: "Qixing Li"
+date: "February 23, 2019"
+output:
+  html_document:
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,message = FALSE,warning = FALSE)
+```
+
+### Read the file by lines and create an empty tibble
+```{r}
+library(tidyverse)
+
+data <- read_lines(
+  "https://raw.githubusercontent.com/qixing810/CUNYSPS-DataScience/master/DS607/dataset/tournamentinfo.txt",
+  skip=4)
+
+len <- length(data)
+
+df <- tibble(
+  num = rnorm(len),
+  states = rnorm(len),
+  name = rnorm(len),
+  point = rnorm(len),
+  pre_rating = rnorm(len),
+  opponent = rnorm(len),
+  opponent1 = rnorm(len),
+  opponent2 = rnorm(len),
+  opponent3 = rnorm(len),
+  opponent4 = rnorm(len),
+  opponent5 = rnorm(len),
+  opponent6 = rnorm(len),
+  opponent7 = rnorm(len),
+  avg_rating = rnorm(len)
+)
+```
+
+### Extract all needed data 
+```{r}
+for (i in 1:len){
+  # extract num for further matching
+  df$num[i]  <- as.numeric(str_trim(unlist(str_split(data[i],"\\|"))[1]))
+  
+  # extract name
+  df$name[i] <- str_trim(unlist(str_split(data[i],"\\|"))[2])
+  
+  # extract point
+  df$point[i] <- as.numeric(str_trim(unlist(str_split(data[i],"\\|"))[3]))
+  
+  # extract opponent num and save each to an individual column
+  df$opponent[i] <- str_extract_all(data[i], "\\d+?\\|")
+  df$opponent1[i] <- as.numeric(unlist(str_extract_all(df$opponent[i], "\\d+"))[1])
+  df$opponent2[i] <- as.numeric(unlist(str_extract_all(df$opponent[i], "\\d+"))[2])
+  df$opponent3[i] <- as.numeric(unlist(str_extract_all(df$opponent[i], "\\d+"))[3])
+  df$opponent4[i] <- as.numeric(unlist(str_extract_all(df$opponent[i], "\\d+"))[4])
+  df$opponent5[i] <- as.numeric(unlist(str_extract_all(df$opponent[i], "\\d+"))[5])
+  df$opponent6[i] <- as.numeric(unlist(str_extract_all(df$opponent[i], "\\d+"))[6])
+  df$opponent7[i] <- as.numeric(unlist(str_extract_all(df$opponent[i], "\\d+"))[7])
+  
+  # extract states
+  df$states[i] <- str_extract(data[i+1], "\\w+")
+  
+  # extract pre_rating
+  df$pre_rating[i] <- str_extract((str_extract(data[i+1], "[^\\d][\\d]{1,4}[^[\\d]]")),"\\d+")
+  df$pre_rating <- as.numeric(df$pre_rating)
+  
+  #itera every 3 lines
+  i = i+3
+}
+
+# remove rows
+df <- filter(df,!is.na(df$num))
+```
+
+### Replace opponent num to rating and calculating average opponent pre-rating
+```{r}
+new_len = nrow(df)
+for (i in 1:new_len){
+  df$opponent1[i] <- df$pre_rating[as.numeric(df$opponent1[i])]
+  df$opponent2[i] <- df$pre_rating[as.numeric(df$opponent2[i])]
+  df$opponent3[i] <- df$pre_rating[as.numeric(df$opponent3[i])]
+  df$opponent4[i] <- df$pre_rating[as.numeric(df$opponent4[i])]
+  df$opponent5[i] <- df$pre_rating[as.numeric(df$opponent5[i])]
+  df$opponent6[i] <- df$pre_rating[as.numeric(df$opponent6[i])]
+  df$opponent7[i] <- df$pre_rating[as.numeric(df$opponent7[i])]
+  df$avg_rating[i] <- round(mean(c(df$opponent1[i],df$opponent2[i],df$opponent3[i],
+                          df$opponent4[i],df$opponent5[i],df$opponent6[i],
+                          df$opponent7[i]),na.rm = TRUE),0)
+} 
+```
+
+### Creat the final data frame and write to CSV file
+```{r}
+output <- select(df,name,states,point,pre_rating,avg_rating)
+head(output)
+write_csv(output, "project1.csv")
+```
