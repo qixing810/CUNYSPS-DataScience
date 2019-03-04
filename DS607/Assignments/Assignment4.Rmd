@@ -1,0 +1,86 @@
+---
+title: "Assignment4-Tidying and Transforming Data "
+author: "Qixing Li"
+date: "March 3, 2019"
+output:
+  html_document:
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE,message = FALSE)
+```
+
+### 1.Load all the required libraries
+```{r}
+library(tidyverse)
+library(plotly)
+```
+
+### 2.Read CSV from github 
+```{r}
+df <- read_csv("https://raw.githubusercontent.com/qixing810/CUNYSPS-DataScience/master/DS607/dataset/w5.csv")
+df
+```
+
+### 3. Clean the dataset
+```{r}
+# remove the null row
+df <- df[-3,]
+
+# replace the remain null value
+df[2,1] <- "ALASKA"
+df[4,1] <- "AMWEST"
+
+# add column names for the first two columns
+colnames(df)[1] <- "Airline"
+colnames(df)[2] <- "Status"
+
+df
+```
+
+### 4. Spread and gather dataset
+```{r}
+# gather the cities into a single column destination
+# spread the value in status column to separate columns
+df1 <- df %>%
+  gather('Los Angeles','Phoenix', 'San Diego', 'San Francisco', 'Seattle',
+         key = 'Destination',value = 'count') %>%
+  spread(Status,count)
+df1
+```
+
+### 5. Data Analysis
+  + Compare the arrival delays of the two airlines
+
+```{r}
+airline_delay<- df %>%
+  mutate(total = rowSums(df[,4:7])) %>%
+  ggplot(aes(Airline,total))+
+  geom_bar(stat = 'identity',aes(fill = Status), position='dodge')+
+  labs(title = "Arrival delays & on time")+
+  xlab("Airlines")+
+  ylab("Number of flights")
+ggplotly(airline_delay)
+```
+
+
+ + Compare the arrival delays of the four cities
+```{r}
+city_delay <- df1 %>%
+  group_by(Destination,Airline) %>%
+  summarise(total = sum(delayed)) %>%
+  ggplot(aes(Destination,total))+
+  geom_bar(stat = 'identity',aes(fill = Airline))+  
+  labs(title = "Arrival delays")+
+  xlab("Destination")+
+  ylab("Number of delays")
+ggplotly(city_delay)
+```
+
+
+
