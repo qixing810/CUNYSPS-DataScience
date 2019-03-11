@@ -1,0 +1,161 @@
+---
+title: "Project 2"
+author: "Qixing Li"
+date: "March 10, 2019"
+output:
+  html_document:
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,message = FALSE,warning = FALSE)
+```
+
+
+## Dataset: Big5
+```
+Vist the website to know more details about the dataset: https://openpsychometrics.org/
+
+Openness - People who like to learn new things and enjoy new experiences usually score high in openness. Openness includes traits like being insightful and imaginative and having a wide variety of interests.
+
+Conscientiousness - People that have a high degree of conscientiousness are reliable and prompt. Traits include being organized, methodic, and thorough.
+
+Extraversion - Extraverts get their energy from interacting with others, while introverts get their energy from within themselves. Extraversion includes the traits of energetic, talkative, and assertive.
+
+Agreeableness - These individuals are friendly, cooperative, and compassionate. People with low agreeableness may be more distant. Traits include being kind, affectionate, and sympathetic.
+
+Neuroticism - Neuroticism is also sometimes called Emotional Stability. This dimension relates to one’s emotional stability and degree of negative emotions. People that score high on neuroticism often experience emotional instability and negative emotions. Traits include being moody and tense.
+
+```
+### Load the dataset
+```{r}
+library(tidyverse)
+df <- read_tsv("big5.csv") 
+```
+
+### Subset the dataset 
+```{r}
+# Here, I will focus on columns age, country of residence, and extraversion which labeled as E1, E2, …, E10.
+df <- na.omit(df)  
+df <- select(df,'age','country', 'E1':'O10')
+head(df)
+```
+
+### Data transformation
+```{r}
+# gather extraversion
+df_e <- df %>% 
+  select(1:17)%>%
+  gather('E1':'E10',
+         key = 'Extraversion',value = 'E_Value')
+
+# gather neuroticism
+df_n <- df %>% 
+  select('N1':'N10')%>%
+  gather('N1':'N10',
+         key = 'Neuroticism',value = 'N_Value') 
+
+# gather agreeableness
+df_a <- df %>% 
+  select('A1':'A10')%>%
+  gather('A1':'A10',
+         key = 'Agreeableness',value = 'A_Value') 
+
+# gather conscientiousness
+df_c <- df %>% 
+  select('C1':'C10')%>%
+  gather('C1':'C10',
+         key = 'Conscientiousness',value = 'C_Value') 
+
+# gather openness
+df_o <- df %>% 
+  select('O1':'O10')%>%
+  gather('O1':'O10',
+         key = 'Openness',value = 'O_Value')
+
+# combine dataset
+l_df <- bind_cols(df_a,df_c,df_e,df_n,df_o)
+
+head(l_df)
+tail(l_df)
+```
+
+```
+Then we can do further analysis of the impact of extraversion base on the long form dataset.
+```
+
+```{r}
+l_df %>%
+  select()
+```
+
+```{r}
+# One example is that we can plot the top 30 countries which have the largest mean value of the agreeableness
+l_df %>%
+  group_by(country) %>%
+  summarise(avg=mean(A_Value)) %>%
+  head(30) %>%
+  ggplot(aes(x=reorder(country,avg),y=avg))+
+  geom_bar(stat = 'identity',aes(fill = country))+
+  labs(title = 'Country of the agreeableness')+
+  xlab("Country")+
+  ylab("Avg")+
+  coord_flip()+
+  theme(legend.position='none')
+```
+
+</br>
+
+## Dataset: Avocado Prices
+```
+http://www.hassavocadoboard.com/retail/volume-and-price-data
+```
+
+### Load the dataset
+```{r}
+avocado <- read_csv("avocado.csv") 
+```
+
+
+### Data transformation
+```{r}
+avocado <- avocado %>% 
+  gather(ProductCode, Volume，4：6)
+
+head(avocado)
+tail(avocado)
+```
+
+
+</br> 
+
+## Dataset: UNICEF dataset
+```
+The UNICEF dataset on under-five child mortality across 196 countries.
+Vist the website to know more details about the dataset: http://www.childmortality.org/
+```
+
+### Load the dataset
+```{r}
+u5mr <- read_csv("unicef-u5mr.csv") 
+```
+
+
+### Data transformation
+```{r}
+l_u5mr <- u5mr %>%
+    gather(year, u5mr, 'U5MR 1950':'U5MR 2015') %>%
+    mutate(year = as.numeric(gsub("U5MR ", "", year)))
+
+head(l_u5mr)
+tail(l_u5mr)
+```
+
+
+
+
+
