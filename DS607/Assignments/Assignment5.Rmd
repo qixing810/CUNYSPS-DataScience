@@ -25,14 +25,22 @@ library(jsonlite)
 
 ## 2.Import XML
 ```{r}
-books_xml <- xmlToDataFrame('books.xml')
+tf <- tempfile()
+## Download the file 
+download.file("https://raw.githubusercontent.com/qixing810/CUNYSPS-DataScience/master/DS607/dataset/books.xml", tf)
+books_xml <- xmlToDataFrame(tf)
 datatable(books_xml)
 ```
 
 
 ## 3.Import JSON
 ```{r}
-books_json <- fromJSON('books.json', simplifyDataFrame = TRUE)
+tf1 <- tempfile()
+
+## Download the file 
+download.file("https://raw.githubusercontent.com/qixing810/CUNYSPS-DataScience/master/DS607/dataset/books.json", tf1)
+
+books_json <- fromJSON(tf1, simplifyDataFrame = TRUE)
 
 # function from [Here](https://stackoverflow.com/questions/48199505/r-read-json-into-a-data-frame)
 books_json_table <- 
@@ -45,7 +53,12 @@ datatable(books_json_table)
 
 ## 4.Import HTML Table
 ```{r}
-books_html <- readHTMLTable('books.html')
+tf2 <- tempfile()
+
+## Download the file 
+download.file("https://raw.githubusercontent.com/qixing810/CUNYSPS-DataScience/master/DS607/dataset/books.html", tf2)
+
+books_html <- readHTMLTable(tf2)
 
 # function from [Here](https://stackoverflow.com/questions/48199505/r-read-json-into-a-data-frame)
 books_html_table <- 
