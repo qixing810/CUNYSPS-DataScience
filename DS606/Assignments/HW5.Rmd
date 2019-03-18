@@ -1,0 +1,184 @@
+---
+title: "HW5"
+author: "Qixing Li"
+date: "March 10, 2019"
+output:
+  html_document:
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE,warning=FALSE,message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### 5.6 Working Backwards, Part II
+```{r}
+n <- 25
+
+# margin of error is (b-a)/2
+ME <- ((77-65)/2)
+ME
+
+# sample mean is calculated as (a+b)/2 
+se <- ((77+65)/2)
+se
+
+# using t(.05)*s/sqrt(n) to calculate the sample standard devation
+df <- 25-1
+t.value <- qt(.95, df)
+t.value
+sd <- (ME/t.value)*5
+sd
+```
+
+### 5.14 SAT Scores
+
+#### a) Raina wants to use a 90% confidence interval. How large of a sample should she collect?
+```{r}
+me1 <- 25
+s.d <- 250
+z <- qnorm(0.95)
+z
+n <- ((z * s.d)/ me1)^2
+n
+```
+
+#### b) Luke wants to use a 99% confidence interval. Without calculating the actual sample size, determine whether his sample should be larger or smaller than Raina's, and explain your reasoning.
+```
+Luke's sample size should be larger than Raina's.
+```
+
+#### c) Calculate the minimum required sample size for Luke.
+```{r}
+me2 <- 25
+sd <- 250
+z <- qnorm(0.99)
+z
+n <- ((z * sd)/ me2)^2
+n
+```
+
+
+### 5.20 High School and Beyond, Part I
+
+#### a) Is there a clear difference in the average reading and writing scores?
+```
+No. The difference in schores is approximately normal.
+```
+
+#### b) Are the reading and writing scores of each student independent of each other?
+```
+Yes, each student's readinga and writing scores are independent of other student's scores.
+```
+
+#### c) Create hypotheses appropriate for the following research question: is there an evident difference in the average score of students in the reading and writing exam?
+```
+H0: There is no difference in the average of reading and writing score.
+Ha: There is difference in the average of reading and writing score.
+```
+
+#### d) Check the conditions required to complete this test.
+```
+Independence of observations and the observations should be aprroximately normal distribution.
+```
+
+#### e) The average observed difference in scores iss x{read-write}=-0.545, and the standard deviation of the differences is 8.887 points.
+```{r}
+mean_diff <- -0.545
+sd <- 8.887
+n <- 200
+
+# Find the standard erro
+sde <- sd / sqrt(n)
+# T stat
+t <- (mean_diff - 0)/ sde
+df1 <- n - 1
+p <- pt(t, df=df1)
+p
+```
+```
+P is more than 0.05 we fail to reject the null hypothesis. 
+```
+
+#### f) What type of error might we have made? Explain what the error means in the context of the application.
+```
+It is Type II error, we incorrectly reject the alternative hypothesis.
+```
+
+#### g) Based on the results of this hypothesis test, would you expect a confidence interval for the average difference between the reading and writing scores to include 0? Explain your reasoning.
+```
+There is no difference between writing and reading, because we fail to reject null hypothesis, 
+```
+
+
+### 5.32 Fuel efficiency of manual and automatic cares, Part I
+H0: There is no difference between automatic car's MPG and manual car's MPG.
+Ha: There is differnce between automatic car's MPG and manual car's MPG.
+
+```{r}
+n <- 26
+mean_diff1 <- 16.12 - 19.85
+standard_erro_diff <- sqrt((3.58^2/n)+(4.51^2/n))
+standard_erro_diff
+t1 <- (mean_diff1 - 0)/ standard_erro_diff
+t1 
+P_value <- pt(t1, df=n-1)
+P_value
+```
+```
+We reject the null hypothesis and accept alternative hypothesis because the p-value is less than 0.05. In this case, there is strong evidence to support the difference between manual and automatic transmissions.
+```
+
+### 5.48 Work hours and education
+
+#### a) Write the hypotheses for evaluating whether the average number of hours worked varies across the five groups.
+```
+H0:There is no difference in average hours worked across the 5 groups.
+Ha: At least 1 group has a difference in the average hours worked with the other groups.
+```
+
+#### b) Check conditions and describe any assumptions you must make to proceed with the test.
+```
+The observations are independent and approximately normal, and the variablity across the groups is about the same.
+```
+
+#### c) Below is part of the output associated with this test. Fill in the empty cells.
+```{r}
+n <- 1172
+k <- 5
+df1 <- k -1
+df2 <- n-k
+mean_total <- 40.45
+group <- data.frame(n=c(121,546,97,253,155),
+                    sd=c(15.81,14.97,18.1,13.62,15.51),
+                    mean=c(38.67, 39.6, 41.39,42.55,40.85))
+sg <- sum (group$n * (group$mean - mean_total)^2)
+sg
+Msg <- (1/df1)*sg
+sse <- 267382
+mse <- sse / df2
+mse
+F <- Msg / mse
+F
+```
+|         |Df   | Sum Sq  |Mean Sq| F value  | Pr (>F) |
+|---------|-----|---------|-------|----------|---------|
+|degree   | **4**    |  **2004.1** | 501.54  | **2.186745** | 0.0682 |
+|Residuals| **1167** |  267382| **229.12**   |              |
+|Total    | **1171** | **269386.1** |        |              |
+
+
+#### d) What is the conclusion of the test?
+```
+Since P-value = 0.0682, that is greater than 0.05, we fail to reject the null hypothesis. There is no difference between groups.
+```
+
+
+
+
+

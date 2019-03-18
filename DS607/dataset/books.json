@@ -1,0 +1,32 @@
+{
+    "BestSellers":[
+        {
+            "Title": "The Chef",
+            "Author": "James Patterson, Max DiLallo",
+            "Price": "$15.40",
+            "Publisher": "Harry N. Abrams",
+            "Publication Date": "2/18/2019",
+            "Genre": "Adventure",
+            "ISBN-13": "978-0316453301"
+        },
+        {
+            "Title": "An Anonymous Girl: A Novel",
+            "Author": "Greer Hendricks,Sarah Pekkanen",
+            "Price": "$16.76",
+            "Publisher": "St. Martin's Press",
+            "Publication Date": "1/8/2019",
+            "Genre": "Thrillers",
+            "ISBN-13": "978-1250133731"
+        },
+        {
+            "Title": "Measure What Matters: How Google, Bono, and the Gates Foundation Rock the World with OKRs",
+            "Author": "John Doerr, Larry Page",
+            "Price": "$17.97",
+            "Publisher": "Portfolio",
+            "Publication Date": "4/24/2018",
+            "Genre": "Business",
+            "ISBN-13": "978-0525536222"
+        }
+    ]
+}
+

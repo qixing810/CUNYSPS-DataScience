@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+  <BestSellers>
+    <Title>The Chef</Title>
+    <Author>James Patterson, Max DiLallo</Author>
+    <Price>$15.40</Price>
+    <Publisher>Harry N. Abrams</Publisher>
+    <Genre>Adventure</Genre>
+    <ISBN-13>978-0316453301</ISBN-13>
+    <Publication_Date>2/18/2019</Publication_Date>
+  </BestSellers>
+  <BestSellers>
+    <Title>An Anonymous Girl: A Novel</Title>
+    <Author>Greer Hendricks,Sarah Pekkanen</Author>
+    <Price>$16.76</Price>
+    <Publisher>St. Martin&#x27;s Press</Publisher>
+    <Genre>Thrillers</Genre>
+    <ISBN-13>978-1250133731</ISBN-13>
+    <Publication_Date>1/8/2019</Publication_Date>
+  </BestSellers>
+  <BestSellers>
+    <Title>Measure What Matters: How Google, Bono, and the Gates Foundation Rock the World with OKRs</Title>
+    <Author>John Doerr, Larry Page</Author>
+    <Price>$17.97</Price>
+    <Publisher>Portfolio</Publisher>
+    <Genre>Business</Genre>
+    <ISBN-13>978-0525536222</ISBN-13>
+    <Publication_Date>4/24/2018</Publication_Date>
+  </BestSellers>
+</root>

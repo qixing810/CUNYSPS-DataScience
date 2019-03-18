@@ -1,0 +1,60 @@
+---
+title: "Assignment5 – Working with XML and JSON in R"
+author: "Qixing Li"
+date: "March 17, 2019"
+output: 
+  html_document:
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE,message = FALSE)
+```
+
+## 1.Load all the required libraries
+```{r}
+library(DT)
+library(XML)
+library(jsonlite)
+```
+
+
+## 2.Import XML
+```{r}
+books_xml <- xmlToDataFrame('books.xml')
+datatable(books_xml)
+```
+
+
+## 3.Import JSON
+```{r}
+books_json <- fromJSON('books.json', simplifyDataFrame = TRUE)
+
+# function from [Here](https://stackoverflow.com/questions/48199505/r-read-json-into-a-data-frame)
+books_json_table <- 
+  data.table::rbindlist(lapply(books_json, function(x) {
+       x[] <- lapply(x, function(y) if(is.data.frame(y)) NA else y)
+      x}))
+datatable(books_json_table)
+```
+
+
+## 4.Import HTML Table
+```{r}
+books_html <- readHTMLTable('books.html')
+
+# function from [Here](https://stackoverflow.com/questions/48199505/r-read-json-into-a-data-frame)
+books_html_table <- 
+  data.table::rbindlist(lapply(books_html, function(x) {
+       x[] <- lapply(x, function(y) if(is.data.frame(y)) NA else y)
+      x}))
+datatable(books_html_table)
+```
+
+
+
+
