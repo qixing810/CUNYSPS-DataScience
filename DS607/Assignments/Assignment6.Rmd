@@ -1,0 +1,59 @@
+---
+title: "Assignment 6 – Web APIs"
+author: "Qixing Li"
+date: "March 31, 2019"
+output: 
+  html_document:
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE,message = FALSE)
+```
+
+
+## Task  
+Choose one of the New York Times APIs, construct an interface in R to read in the JSON data,
+and transform it to an R dataframe.  
+
+## Libraries  
+Loading required packages  
+```{r}
+library(jsonlite)
+library(tidyverse)
+library(DT)
+library(tm)
+library(wordcloud)
+library(SnowballC)
+library(RColorBrewer)
+```
+
+
+## Tidy & Wrangle
+### Read and parse JSON format files
+```{r}
+url <- "https://api.nytimes.com/svc/movies/v2/reviews/all.json?order=by-opening-date&api-key= PEZd0NEB405hUkS4ym6cBBB81CauknUu"
+df <- fromJSON(url,simplifyDataFrame = TRUE)
+datatable(df$results)
+```
+
+### Subset
+```{r}
+df1 <- df$results %>%
+  select(display_title,byline,headline,summary_short)
+datatable(df1)
+```
+
+## Visualization
+### Word Cloud
+```{r}
+Corpus<- Corpus(VectorSource(df1$summary_short))
+Corpus<- tm_map(Corpus, content_transformer(tolower))
+Corpus<- tm_map(Corpus, removeWords, stopwords())
+Corpus<- tm_map(Corpus, stripWhitespace)
+wordcloud(Corpus, min.freq = 2, colors = brewer.pal(8,"Set2"),random.order = FALSE, rot.per = .1)
+```
