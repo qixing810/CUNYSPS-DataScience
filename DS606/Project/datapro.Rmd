@@ -1,0 +1,107 @@
+---
+title: "Project Proposal"
+author: "Qixing Li"
+date: "April 7, 2019"
+output:
+  html_document:
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+### Data Preparation
+
+```{r setup, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
+library(tidyverse)
+wine <- read.csv('wineQualityReds.csv')
+```
+
+
+### Research question 
+
+**You should phrase your research question in a way that matches up with the scope of inference your dataset allows for.**
+```
+Which variables in the dataset are responsible for the quality of the wine. 
+```
+
+
+### Cases 
+
+**What are the cases, and how many are there?**
+```
+Each case represents one wine. There are 1599 observations in the given data set.
+```
+
+
+### Data collection 
+
+**Describe the method of data collection.**
+```
+The data set is created by Paulo Cortez (Univ. Minho), Antonio Cerdeira, Fernando Almeida, Telmo Matos and Jose Reis (CVRVV) @ 2009.
+```
+
+
+### Type of study 
+
+**What type of study is this (observational/experiment)?**
+
+```
+This is an observational study.
+```
+
+### Data Source 
+
+**If you collected the data, state self-collected. If not, provide a citation/link.**
+```
+Data is available online here:
+https://www.kaggle.com/piyushgoyal443/red-wine-dataset/downloads/red-wine-dataset.zip/1
+
+P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis. Modeling wine preferences by data mining from physicochemical properties. In Decision Support Systems, Elsevier, 47(4):547-553. ISSN: 0167-9236.
+Available at: http://dx.doi.org/10.1016/j.dss.2009.05.016  
+```
+
+
+
+### Dependent Variable
+
+**What is the response variable? Is it quantitative or qualitative?**
+```
+The response variable is quality and is numerical.
+```
+
+### Explanatory
+
+**What is the explanatory variable, and what type is it (numerical/categorical)?**
+```
+All the explanatory variablies fixed.acidity, volatile.acidity,citric.acid,residual.sugar,chlorides,free.sulfur.dioxide,total.sulfur.dioxide,density,pH,sulphates,alcohol are numerical. 
+```
+
+
+### Relevant summary statistics 
+
+**Provide summary statistics for each the variables. Also include appropriate visualizations related to your research question (e.g. scatter plot, boxplots, etc). This step requires the use of R, hence a code chunk is provided below. Insert more code chunks as needed.**
+
+```{r}
+names(wine)
+str(wine)
+```
+
+#### Univariate Analysis
+**Red wine : Quality**
+```{r}
+summary(wine$quality)
+ggplot(aes(x = quality, color = I('white')), data = wine)+
+  geom_bar()+ scale_x_continuous(breaks = seq(3, 8, 1))
+```
+
+#### Bivariate Analysis
+**Box Plot: Alcohol vs quality**
+```{r}
+ggplot(aes(x = as.factor(quality), y = wine$alcohol),
+  data = wine)+
+  geom_boxplot()+
+  scale_x_discrete(breaks = seq(1, 10, 1))+
+  scale_y_continuous(breaks = seq(8, 15, 0.5))
+```
