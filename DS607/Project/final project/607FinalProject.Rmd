@@ -14,26 +14,35 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,warning = FALSE,message = FALSE)
 ```
+#College Graduates Salary Analysis
+As a student choosing what college to attend and what you want to study is a difficult decision. Where you choose to go to college, what type of degree you decide to get, and the major you choose to study can  impact your future salary potential. I always encourage people to purchase what their passion about, but understanding what your earning power is likely to be post-graduation is crucial in order to make a sound financial decision when selecting a college and the major you want to study. This Post-College salaries exploration research I hope will help students make their decision and have a better expectation after graduation.
 
-#1. Data
 
-##1.1 Data Source
+#General Project Plan  
+  1.Choose and decide data sources  
+  2.Acquire dataset  
+  3.Data transformation and preparation   
+  4.Analyze the data  
+  5.Conclusions
+  
+#1.Data Sources
 
-We obtained data from [Wall Street Journal](http://online.wsj.com/public/resources/documents/info-Degrees_that_Pay_you_Back-sort.html?mod=article_inline)
-and from [U.S. DEPARTMENT OF EDUCATION](https://collegescorecard.ed.gov/data/).
+We obtained data from two different sources:
+  1.[Wall Street Journal](http://online.wsj.com/public/resources/documents/info-Degrees_that_Pay_you_Back-sort.html?mod=article_inline)  
+  2.[U.S. DEPARTMENT OF EDUCATION](https://collegescorecard.ed.gov/data/).
 
+
+#2.Acquring Data 
 
 ```{r}
-#Load packages and data
+#Load necessary packages
 library(tidyverse)
 library(DT)
 library(jsonlite)
 library(Rmisc)
 ```
 
-
-##1.2 Data Load
-Read and parse JSON format files from U.S. DEPARTMENT OF EDUCATION
+2.1 Read and parse JSON format files from U.S. DEPARTMENT OF EDUCATION API
 ```{r}
 df_api = NULL
 for(i in 0:100) {
@@ -44,7 +53,7 @@ for(i in 0:100) {
 }
 ```
 
-We read the WSJ data from the CSV file which were uploaded to Github.
+2.2 Read three WSJ CSV files which were uploaded to Github.
 ```{r}
 # salaries by degree
 url_deg <- "https://raw.githubusercontent.com/qixing810/CUNYSPS-DataScience/master/DS607/Project/final%20project/degrees-that-pay-back.csv"
@@ -72,10 +81,10 @@ df_reg <- read_csv(url_reg,
 ```
 
 
-#2. Tidy and Wrangle
+#3. Data Tidying and Wrangling
 
-##2.1 Data Structure
-First we looked at the structure of the dataset.
+##3.1 Data Structure
+First we looked at the structure of each dataset.
 ```{r}
 glimpse(df_api)
 glimpse(df_deg)
@@ -83,9 +92,9 @@ glimpse(df_col)
 glimpse(df_reg)
 ```
 
-##2.2 Data Transformation
-####2.21 Data Types
-We removed the $ in the numbers and changed the data types from character to numeric in each dataset. And we change the column names in the df_api dataset.
+##3.2 Data Transformation
+###3.2.1 Data Types
+We removed the "$" in the numbers and changed the data types from character to numeric in each dataset. And we changed the column names in the df_api dataset.
 ```{r}
 #salaries by degree
 df_deg$start_med_slry <- parse_number(df_deg$start_med_slry)
@@ -121,11 +130,12 @@ datatable(df_reg)
 
 ```{r}
 names(df_api) <-c("school","median_6yr","median_8yr","median_10yr")
+head(df_api)
 ```
 
 
-#3. Exploratory Data Analysis
-##3.1 Median salary analysis in the dataset from EDU
+#4. Exploratory Analysis  
+##4.1 Median salary analysis in the dataset from EDU
 ```{r}
 df_api_median <- df_api %>%
   select(median_6yr,median_8yr,median_10yr) %>%
@@ -133,7 +143,9 @@ df_api_median <- df_api %>%
 datatable(df_api_median)
 ```
 
-##3.2 Starting salary vs mid career salaries distribution analysis in the dataset from WSJ
+##4.2 Starting vs Mid-career salaries distribution
+
+data transformation from wide to long
 ```{r}
 start_vs_mid <- df_reg%>%
                  select(start_med_slry, mid_car_slry)%>%
@@ -142,12 +154,13 @@ start_vs_mid <- df_reg%>%
 head(start_vs_mid)
 ```
 
+We ploted the dataset into histogram to analyze the distribution between starting salary and mid-career salary.
 ```{r}
 ggplot(start_vs_mid, aes(salary, fill=career))+
   geom_histogram(position ="dodge")
 ```
 
-Median of starting and mid salary
+Median of starting and mid-career salary
 ```{r}
 start_med<- start_vs_mid%>%
   filter(career=="start_med_slry")%>%
@@ -160,26 +173,29 @@ mid_med<- start_vs_mid%>%
 mid_med
 ```
 
-The distribution for starting median salary is definitely concentrated at the lower range of salaries and is right-skewed. Graduates of most schools start out with median of $45,000. Towards mid-career, the distribution of median salaries becomes more dispersed and the median increases to $80,000.
+The distribution for starting median salary is definitely concentrated at the lower range of salaries and is right-skewed. Graduates of most schools start out with median of $45,000. Towards mid-career, the distribution of median salaries becomes more dispersed and the median increases to $82,000.  
 
-####3.21 Scatter plot
-Analyze the correlation between starting and mid-career salaries.
+##4.3 Correlation between starting and mid-career salaries
+
+From the scatter plot above, we can see that there is a strong positive correlaton between the starting salaries and the mid-career salaries.
 ```{r}
 ggplot(df_reg, aes(start_med_slry,mid_car_slry))+
   geom_point()+
   geom_smooth()
 ```
 
-From the scatter plot above, we can see that there is a strong positive correlaton between the starting salaries and the mid-career salaries.
 
-##3.3 Salary by College Location
-```{r}
-summary(df_reg$region)
-```
+
+##4.4 Salary by College Location Analysis
+
+This is the salaries by college region data set. We will look at the distribution across regions.
+
+First of all, Let us have a look the summary starting salary at the df_region dataset:
 ```{r}
 summary(df_reg$start_med_slry)
 ```
 
+Let's see if there is any difference in starting or mid-career salary by region.
 ```{r}
 p1<-ggplot(df_reg,aes(x=region,y=start_med_slry))+
          geom_boxplot(aes(fill=region))+
@@ -196,15 +212,19 @@ p2<-ggplot(df_reg,aes(x=region,y=mid_car_slry))+
 multiplot(p1, p2, layout=matrix(c(1, 2), 2, 1, byrow=TRUE))
 ```
 
-##3.4 Salary by College Type
+We can see that California and the Northeastern region appear to have higher starting and mid-career salaries.   
+
+##4.5 Salary by College Type Analysis
+
+###4.5.1
 First,we will take a look at how many types of school and count the numbers of each.
 ```{r}
 ggplot(df_col, aes(school_type)) +
   geom_bar()
 ```
-From the plot above we noticed that most of the schools are state schools. 
+From the plot above, we noticed that most of the schools are state schools. 
 
-####3.41 Starting salary vs mid career salaries analysis by college type
+###4.5.2 Starting vs mid-career salaries analysis by college type
 ```{r}
 df_col_type_slry <- df_col %>%
   select(school_type, start_med_slry, mid_car_slry) %>%
@@ -218,9 +238,19 @@ ggplot(df_col_type_slry, aes(reorder(school_type, salary), salary, fill = timeli
   theme(legend.position = "right") +
   xlab('School type') 
 ```
+Both engineering and ivy league schools have higher starting and mid-career median salaries.   
 
-####3.42 Top 10 schools by type
-Top 10 schools by median start salary
+###4.5.3 Statisical Analysis
+
+Let's run a linear regression model for median salary and school types
+```{r}
+summary(lm(formula = start_med_slry ~ school_type, data=df_col))
+```
+
+The intercept represents the starting salary at $59,058. The estimate predict from Ivy school will increse $1,417 , others type of schools will have a negative affect to the salary.  
+
+###4.5.4 Top 10 schools by type
+Top 10 schools by median starting salary
 ```{r}
 df_start_top10 <- df_col %>%
   select(school_name, school_type, start_med_slry) %>%
@@ -234,23 +264,10 @@ ggplot(df_start_top10, aes(reorder(school_name, start_med_slry), start_med_slry,
   coord_flip()
 ```
 
-Top 10 schools by median mid-career salary
-```{r}
-df_mid_top10 <- df_col %>%
-  select(school_name, school_type, mid_car_slry) %>%
-  arrange(desc(mid_car_slry)) %>%
-  top_n(10)
+In the top 10 list, we can see engineering and ivy league have the highest median salary in  starting salary.   
 
-ggplot(df_mid_top10, aes(reorder(school_name, mid_car_slry), mid_car_slry,fill = school_type)) +
-  geom_col(alpha = 0.8) +
-  geom_text(aes(label = mid_car_slry), hjust = 1.1, color = 'gray30') +
-  xlab(NULL) +
-  coord_flip()
-```
-In the top 10 list, we can see engineering and ivy league have the highest median salary in both startig and mid-career. 
-
-##3.5 Salary by Majores
-####3.51 Starting median salary by major
+##4.6 Salary by Majores Analysis
+###4.6.1 Starting median salary by major
 ```{r}
 ggplot(df_deg, aes(x = reorder(major, start_med_slry), start_med_slry)) +
   geom_col(fill = "blue", alpha = 0.5) +
@@ -258,11 +275,11 @@ ggplot(df_deg, aes(x = reorder(major, start_med_slry), start_med_slry)) +
   geom_text(aes(label = start_med_slry), size = 3, hjust = 1.1) +
   xlab(NULL) +
   coord_flip() +
-  ggtitle("Starting salary by major")
+  ggtitle("Starting Salary by Majors")
 ```
-From the plot above we can see that Physician has the highest median starting salaries. In the top ten highest median starting salaries, most are engineering and computer science related majors. 
+From the plot above, we can see that Physician has the highest median starting salaries. In the top ten highest median starting salaries, most of them are engineering and computer science related majors. 
    
-####3.52 Starting and mid career median salary by major
+###4.6.2 Starting and mid-career median salary by major
 ```{r}
 ggplot(df_deg, aes(x = reorder(major, mid_car_slry), mid_car_slry)) +
   geom_col(fill = 'pink',alpha = 0.5) +
@@ -271,9 +288,11 @@ ggplot(df_deg, aes(x = reorder(major, mid_car_slry), mid_car_slry)) +
   scale_fill_manual(values = c('blue', 'pink')) +
   xlab(NULL) +
   coord_flip() +
-  ggtitle("Mid-career salary by major")
+  ggtitle("Mid-career Salary by Major")
 ```
-From the plot above we can see that all of the majors have highest median starting salaries have high salaries in mid-career. 
+From the plot above, we can see that all of the majors have highest median starting salaries have high salaries in mid-career. 
 
+#5. Conclusion
+Chosing which colleges to attend and career choices are always a difficult decison, we should consider many factors including post-graduate salary. We found out that salaries differed a lot by school type and degree, but not  much by location. Based on our study, studuents graduated in STEM major from Ivy or Engineering schools located in California or Northeast have the highest salary.
 
 
