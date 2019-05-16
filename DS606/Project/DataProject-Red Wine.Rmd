@@ -1,0 +1,296 @@
+---
+title: "Data Project - Red Wine Quality"
+author: "Qixing Li"
+date: "May 12, 2019"
+output:
+  html_document:
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE,message = FALSE)
+```
+
+# Part 1 - Introduction
+
+The Wine Quality dataset consists of red wine samples. There are 1599 observations total in the data set. This is an observational study. All the explanatory variablies fixed.acidity, volatile.acidity,citric.acid,residual.sugar,chlorides,free.sulfur.dioxide,total.sulfur.dioxide,density,pH,sulphates,alcohol are numerical. The relationships between these variables are explored throughout this study.
+
+# Part 2 - Data
+## 2.1 Data Source
+Data is available on [Kaggle](https://www.kaggle.com/piyushgoyal443/red-wine-dataset) 
+
+P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis. Modeling wine preferences by data mining from physicochemical properties. In Decision Support Systems, Elsevier, 47(4):547-553. ISSN: 0167-9236.
+Available at: http://dx.doi.org/10.1016/j.dss.2009.05.016  
+
+## 2.2 Data Preparation
+```{r}
+#Load packages
+library(tidyverse)
+library(gridExtra)
+library(GGally)
+library(scales)
+library(lattice)
+library(MASS)
+library(memisc)
+
+#Read the data from the CSV file.
+wine <- read.csv('wineQualityReds.csv')
+```
+
+### 2.3 Data Structure
+```{r}
+names(wine)
+glimpse(wine)
+```
+
+### 2.4 Description of attributes:
+```
+1 - fixed acidity: most acids involved with wine or fixed or nonvolatile (do not evaporate readily)
+
+2 - volatile acidity: the amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste
+
+3 - citric acid: found in small quantities, citric acid can add 'freshness' and flavor to wines
+
+4 - residual sugar: the amount of sugar remaining after fermentation stops, it's rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet
+
+5 - chlorides: the amount of salt in the wine
+
+6 - free sulfur dioxide: the free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents microbial growth and the oxidation of wine
+
+7 - total sulfur dioxide: amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine, but at free SO2 concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine
+
+8 - density: the density of water is close to that of water depending on the percent alcohol and sugar content
+
+9 - pH: describes how acidic or basic a wine is on a scale from 0 (very acidic) to 14 (very basic); most wines are between 3-4 on the pH scale
+
+10 - sulphates: a wine additive which can contribute to sulfur dioxide gas (S02) levels, wich acts as an antimicrobial and antioxidant
+
+11 - alcohol: the percent alcohol content of the wine
+
+Output variable (based on sensory data): 12 - quality (score between 0 and 10)
+```
+
+
+# Part 3 - Exploratory data analysis
+
+## 3.1 Univariate Analysis
+```{r}
+grid.arrange(qplot(wine$fixed.acidity),
+             qplot(wine$volatile.acidity),
+             qplot(wine$citric.acid),
+             qplot(wine$residual.sugar),
+             qplot(wine$chlorides),
+             qplot(wine$free.sulfur.dioxide),
+             qplot(wine$total.sulfur.dioxide),
+             qplot(wine$density),
+             qplot(wine$pH),
+             qplot(wine$sulphates),
+             qplot(wine$alcohol),
+             qplot(wine$quality),
+             ncol = 3)
+```
+
+Let's begin with exploring the dataset using single variable at a time.
+
+#### 3.11 Quality 
+```{r}
+summary(wine$quality)
+ggplot(aes(x = quality, color = I('white')), data = wine)+
+  geom_bar()+ scale_x_continuous(breaks = seq(3, 8, 1))
+```
+
+From the plot we can see that most of the wine are of quality level 5 and more than 90% are level 5 to level 7.
+
+#### 3.12 Residual Sugar:
+```{r}
+ggplot(aes(x=residual.sugar),data=wine)+
+  geom_histogram()
+```
+
+Most of the red wine do not contain much sugar.
+
+#### 3.13 Alcohol:
+```{r}
+ggplot(aes(x=alcohol),data=wine)+
+  geom_histogram()
+```
+
+#### 3.14 PH:
+```{r}
+ggplot(aes(x=pH),data=wine)+
+  geom_histogram()
+```
+
+#### 3.15 Fixed.acidity
+```{r}
+summary(wine$fixed.acidity)
+ggplot(aes(x=fixed.acidity),data=wine)+
+  geom_histogram()+
+  scale_x_continuous(breaks = seq(0,16,2))
+```
+
+#### 3.15 Volatile.acidity
+```{r}
+summary(wine$volatile.acidity)
+ggplot(aes(x=volatile.acidity),data=wine)+
+  geom_histogram()+
+  scale_x_continuous(breaks = seq(0,1.6,0.2))
+```
+
+#### 3.16 Density
+```{r}
+ggplot(aes(x=density),data=wine)+
+  geom_histogram()
+```
+
+#### 3.17 Sulphates
+```{r}
+summary(wine$sulphates)
+ggplot(aes(x=sulphates),data=wine)+
+  geom_histogram()+
+  scale_x_continuous(breaks = seq(0.3,1.3,0.1),
+                     limits = c(0.3,1.3))
+```
+
+#### 3.18 Citric Acid:
+```{r}
+summary(wine$citric.acid)
+ggplot(aes(x = citric.acid, color = I('white')), data = wine)+
+  geom_histogram(binwidth = 0.01)+
+  scale_x_continuous(breaks = seq(0, 1, 0.05))
+sum(wine$citric.acid > 0.0 & wine$citric.acid < 0.5) /
+  nrow(wine) * 100
+sum(wine$citric.acid == 0)
+```
+
+#### 3.19 Chlorides:
+```{r}
+summary(wine$chlorides)
+ggplot(aes(x = chlorides), data = wine) + 
+  geom_histogram(bins = 50) +
+  scale_x_continuous(breaks = seq(0, 0.7, 0.1))
+ggplot(aes(x = chlorides, color = I('white')), data = wine) +
+  geom_histogram(bins = 30)+
+  scale_x_continuous(breaks = seq(0.01, 0.12, 0.01), limits= c(0.03, 0.12))
+```
+
+
+## 3.2 Bivariate Analysis
+First, let's plot the correlation of all varianles against each other. 
+
+```{r}
+wine$quality <- as.numeric(wine$quality)
+ggcorr(wine, geom = "circle", nbreaks = 5)
+``` 
+
+```{r}
+# scatter plot of each variables
+theme_set(theme_minimal(20))
+wine_sub <- wine[,c(2:13)]
+wine_sample <- wine_sub[sample.int(nrow(wine_sub),1000),]
+ggpairs(wine_sample,upper = list(continuous = wrap("cor", size=3)))
+```
+
+We can see that there are some strong correlations between some variables such as total.sulfur.dioxide and free.sulfur.dioxide, volatile.acidity and fixed.acidity, total.sulfur.dioxide and fixed.acidity, fixed.acidity and PH.
+
+#### 3.21 free.sulfur.dioxide VS total.sulfur.dioxide
+```{r}
+ggplot(aes(x=free.sulfur.dioxide,y=total.sulfur.dioxide),data=wine)+
+  geom_point()
+```
+
+As menthioned above, there is a strong correlation between the two variables.
+
+#### 3.22 sulphates VS pH
+```{r}
+ggplot(aes(x=sulphates,y=pH),data=wine)+
+  geom_point(alpha=1/10,position = 'jitter')
+cor.test(wine$sulphates,wine$pH)
+```
+
+There is some negative correlation between the two variables.
+
+However, what we really concern is the relation between quality and other variables. 
+So, let's see the relation between quality and other variables.
+
+#### 3.23 quality VS volatile.acidity
+```{r}
+ggplot(aes(x=quality,y=volatile.acidity),data=wine)+
+  geom_point(position = 'jitter')+
+  geom_smooth(method = 'lm',color='red')
+cor.test(wine$quality,wine$volatile.acidity)
+```
+
+It's clear that higher quality red wine has lower volatile.acidity.
+
+#### 3.24 quality VS citric.acid
+```{r}
+ggplot(aes(x=quality,y=citric.acid),data=wine)+
+  geom_point(position = 'jitter')+
+  geom_smooth(method = 'lm',color='red')
+cor.test(wine$quality,wine$citric.acid)
+```
+
+It's clear that higher quality red wine has higher citric.acid.
+
+#### 3.25 quality VS density
+```{r}
+ggplot(aes(x=quality,y=density),data=wine)+
+  geom_point(position = 'jitter')+
+  geom_smooth(method = 'lm',color='red')
+cor.test(wine$quality,wine$density)
+```
+
+It shows that higher quality red wine has lower density.
+
+#### 3.26 quality VS sulphates
+```{r}
+ggplot(aes(x=quality,y=sulphates),data=wine)+
+  geom_point(position = 'jitter')+
+  geom_smooth(method = 'lm',color='red')
+cor.test(wine$quality,wine$sulphates)
+```
+
+It shows that higher quality red wine has higher sulphates.
+
+Let's try a different method to explor the relationship.
+#### 3.27 quality VS alcohol
+```{r}
+ggplot(aes(x=factor(quality),y=alcohol),data=wine)+
+  geom_point(position = 'jitter',alpha=1/5)+
+  geom_boxplot(alpha=1/2,color='green')+
+  stat_summary(fun.y = 'mean',geom='point',color='red')+
+  geom_smooth(method = 'lm',aes(group=1))
+```
+
+It shows that higher quality red wine has higher alcohols.
+
+#### 3.28 quality VS chlorides
+```{r}
+ggplot(aes(x=factor(quality),y=chlorides),data=wine)+
+  geom_point(position = 'jitter',alpha=1/5)+
+  geom_boxplot(alpha=1/2,color='green')+
+  stat_summary(fun.y = 'mean',geom = 'point',color='red')+
+  geom_smooth(method = 'lm',aes(group=1))
+```
+
+It seems like that higher quality red wine has lower chlorides.
+
+
+# Part 4 - Inference
+All of the physiochemical properties provided were required to understand the interactions between each of them. We are determing 'Quality' which is a sensory perception using physiochemical properties  that exhibit complex interactions to produce the desired flavors.That being said, by making available the category of flavors,a sensory preference or a profile which maps the quality,  analysing the interactions would have been fruitful.The data  made available for analysis  has fewer to nil, lower and superior wine data adding bias to data analysis.
+
+
+# Part 5 - Conclusion
+Overall, observing and analysing this dataset showed that wines with higher level of alcohol and citric acid has a higher quality, while those with high level of total sulfur dioxide or volatile acidity have lower quality. 
+However, if we can have a dataset which consis more random examples with aprroximately uniform quality of wines. Then we will be able to perform a better analysis.
+
+
+# References
+1. P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis. Modeling wine preferences by data mining from physicochemical properties. In Decision Support Systems, Elsevier, 47(4):547-553. ISSN: 0167-9236.
+Available at: [@Elsevier] http://dx.doi.org/10.1016/j.dss.2009.05.016 [Pre-press (pdf)] http://www3.dsi.uminho.pt/pcortez/winequality09.pdf [bib] http://www3.dsi.uminho.pt/pcortez/dss09.bib
+2. https://www.kaggle.com/sagarnildass/red-wine-analysis-by-r/code
